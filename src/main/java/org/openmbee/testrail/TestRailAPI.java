@@ -72,7 +72,7 @@ public class TestRailAPI {
 
     GET_MILESTONE_ENDPOINT = new RestEndpoint("/api/v2/get_milestone/:milestone_id", HttpGet.METHOD_NAME),
             GET_MILESTONES_ENDPOINT = new RestEndpoint("/api/v2/get_milestones/:project_id", HttpGet.METHOD_NAME),
-            ADD_MILESTONE_ENDPOINT = new RestEndpoint("/api/v2/get_milestones/:project_id", HttpPost.METHOD_NAME),
+            ADD_MILESTONE_ENDPOINT = new RestEndpoint("/api/v2/add_milestone/:project_id", HttpPost.METHOD_NAME),
             UPDATE_MILESTONE_ENDPOINT = new RestEndpoint("/api/v2/update_milestone/:milestone_id", HttpPost.METHOD_NAME),
             DELETE_MILESTONE_ENDPOINT = new RestEndpoint("/api/v2/delete_milestone/:milestone_id", HttpPost.METHOD_NAME),
 
@@ -278,6 +278,14 @@ public class TestRailAPI {
         Map<String, String> parameters = new HashMap<>();
         parameters.put(":milestone_id", Integer.toString(milestoneId));
         return request(GET_MILESTONE_ENDPOINT, parameters, TestRailMilestone.class);
+    }
+
+    public TestRailMilestone addMilestone(TestRailMilestone milestone) throws URISyntaxException, IOException {
+        assertThat(milestone.getProjectId(), not(0));
+        assertThat(milestone.getName(), not(emptyOrNullString()));
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(":project_id", Integer.toString(milestone.getProjectId()));
+        return request(ADD_MILESTONE_ENDPOINT, parameters, mapper.writeValueAsBytes(milestone), TestRailMilestone.class);
     }
 
     @SuppressWarnings("unchecked")
