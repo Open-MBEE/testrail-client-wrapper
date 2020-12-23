@@ -1,5 +1,5 @@
 group 'org.openmbee.testrail'
-version '1.0.1'
+version '1.1.0'
 
 apply plugin: 'java'
 apply plugin: 'idea'
@@ -78,7 +78,6 @@ artifactory {
         defaults {
             publications('mavenJava')
         }
-        clientConfig.setIncludeEnvVars(true)
         if (buildNumber != null && !buildNumber.isEmpty()) {
             clientConfig.info.setBuildNumber(buildNumber)
         }

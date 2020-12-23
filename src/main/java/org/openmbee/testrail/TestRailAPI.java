@@ -131,8 +131,9 @@ public class TestRailAPI {
             GET_TESTS_ENDPOINT = new RestEndpoint("/api/v2/get_tests/:run_id", HttpGet.METHOD_NAME),
 
     GET_USER_ENDPOINT = new RestEndpoint("/api/v2/get_user/:user_id", HttpGet.METHOD_NAME),
+            GET_CURRENT_USER_ENDPOINT = new RestEndpoint("/api/v2/get_current_user", HttpGet.METHOD_NAME),
             GET_USER_BY_EMAIL_ENDPOINT = new RestEndpoint("/api/v2/get_user_by_email&email=:email", HttpGet.METHOD_NAME),
-            GET_USERS_ENDPOINT = new RestEndpoint("/api/v2/get_users", HttpGet.METHOD_NAME);
+            GET_USERS_ENDPOINT = new RestEndpoint("/api/v2/get_users/:project_id", HttpGet.METHOD_NAME);
 
     private final URI uri;
     private final String username;
@@ -612,6 +613,10 @@ public class TestRailAPI {
         return request(GET_USER_ENDPOINT, parameters, TestRailUser.class);
     }
 
+    public TestRailUser getCurrentUser() throws URISyntaxException, IOException {
+        return request(GET_CURRENT_USER_ENDPOINT, TestRailUser.class);
+    }
+
     public TestRailUser getUserByEmail(String email) throws URISyntaxException, IOException {
         Map<String, String> parameters = new HashMap<>();
         parameters.put(":email", email);
@@ -620,7 +625,16 @@ public class TestRailAPI {
 
     @SuppressWarnings("unchecked")
     public List<TestRailUser> getUsers() throws URISyntaxException, IOException {
-        return request(GET_USERS_ENDPOINT, List.class, TestRailUser.class);
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(":project_id", "");
+        return request(GET_USERS_ENDPOINT, parameters, List.class, TestRailUser.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<TestRailUser> getUsers(int projectId) throws URISyntaxException, IOException {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(":project_id", Integer.toString(projectId));
+        return request(GET_USERS_ENDPOINT, parameters, List.class, TestRailUser.class);
     }
 
     private <T> T request(RestEndpoint endpoint, Class<T> parametrized, Class... parametrizedClasses) throws URISyntaxException, IOException {
